@@ -1,6 +1,7 @@
 import React from "react";
 import "./App.css";
 import { Header } from "./components/Header/header";
+import { Subreddits } from "./components/Subreddits/Subreddits";
 
 function App() {
   return (
@@ -12,8 +13,7 @@ function App() {
           <p>Reddit posts will appear here</p>
         </main>
         <aside className="sidebar">
-          <h2>Subreddits</h2>
-          <p>Popular subreddits will appear here</p>
+          <Subreddits />
         </aside>
       </div>
     </div>
