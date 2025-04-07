@@ -1,0 +1,73 @@
+/* Base styling untuk card */
+.post-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 16px;
+  padding: 16px;
+  transition: box-shadow 0.3s ease;
+}
+
+.post-card:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Styling judul post */
+.post-card h2 {
+  color: #333;
+  font-size: 18px;
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+/* Styling thumbnail */
+.post-thumbnail {
+  margin: 12px 0;
+  max-height: 250px;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.post-thumbnail img {
+  max-width: 100%;
+  object-fit: cover;
+}
+
+/* Styling detail post */
+.post-details {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  color: #666;
+  gap: 6px;
+}
+
+.post-details span {
+  margin-right: 12px;
+}
+
+/* Styling statistik post */
+.post-stats {
+  display: flex;
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px solid #eee;
+}
+
+.post-stats span {
+  display: flex;
+  align-items: center;
+  margin-right: 16px;
+  font-weight: 500;
+}
+
+/* Media query untuk responsive design */
+@media (max-width: 768px) {
+  .post-card {
+    padding: 12px;
+  }
+
+  .post-card h2 {
+    font-size: 16px;
+  }
+}
