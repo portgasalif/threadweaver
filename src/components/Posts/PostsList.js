@@ -3,8 +3,7 @@ import "./PostsList.css";
 import PostCard from "./PostCard";
 import { fetchSubredditPosts } from "../../services/redditApi";
 
-
-export const PostsList = () => {
+export const PostsList = ({ selectedSubreddit }) => {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -13,7 +12,7 @@ export const PostsList = () => {
     const fetchPosts = async () => {
       setIsLoading(true);
       try {
-        const fetchedPosts = await fetchSubredditPosts("popular");
+        const fetchedPosts = await fetchSubredditPosts(selectedSubreddit);
         setPosts(fetchedPosts);
       } catch (error) {
         setError(error.message);
@@ -23,7 +22,7 @@ export const PostsList = () => {
     };
 
     fetchPosts();
-  }, []);
+  }, [selectedSubreddit]);
 
   if (isLoading) {
     return <div className="loading">Loading...</div>;
@@ -34,7 +33,11 @@ export const PostsList = () => {
   }
 
   if (posts.length === 0) {
-    return <div className="no-posts">No posts available</div>;
+    return (
+      <div className="no-posts">
+        No posts available in r/{selectedSubreddit}
+      </div>
+    );
   }
 
   return (
