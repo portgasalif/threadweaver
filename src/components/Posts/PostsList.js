@@ -1,43 +1,45 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./PostsList.css";
 import PostCard from "./PostCard";
+import { fetchSubredditPosts } from "../../services/redditApi";
 
-const dummyPosts = [
-  {
-    id: 1,
-    title: "Ini adalah judul post pertama yang agak panjang untuk testing UI",
-    author: "user123",
-    subreddit: "webdev",
-    upvotes: 420,
-    commentCount: 69,
-    timePosted: "5 hours ago",
-    image: "https://picsum.photos/200/200",
-  },
-  {
-    id: 2,
-    title: "Cara membuat Reddit client dengan React dan Redux",
-    author: "reactdev",
-    subreddit: "reactjs",
-    upvotes: 132,
-    commentCount: 24,
-    timePosted: "2 days ago",
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 3,
-    title: "Apa pendapat kalian tentang framework JavaScript terbaru?",
-    author: "jsmaster",
-    subreddit: "programming",
-    upvotes: 55,
-    commentCount: 43,
-    timePosted: "12 hours ago",
-    image: null,
-  },
-];
+
 export const PostsList = () => {
+  const [posts, setPosts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      setIsLoading(true);
+      try {
+        const fetchedPosts = await fetchSubredditPosts("popular");
+        setPosts(fetchedPosts);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
+  if (isLoading) {
+    return <div className="loading">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="error">Error: {error}</div>;
+  }
+
+  if (posts.length === 0) {
+    return <div className="no-posts">No posts available</div>;
+  }
+
   return (
     <div className="posts-container">
-      {dummyPosts.map((post) => (
+      {posts.map((post) => (
         <PostCard key={post.id} post={post} />
       ))}
     </div>
