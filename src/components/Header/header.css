@@ -25,7 +25,10 @@ header {
 .searchBar-container {
   flex-grow: 1;
   margin: 0 20px;
+}
+.searchBar-container form {
   display: flex;
+  width: 100%;
 }
 
 .searchBar {

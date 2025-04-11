@@ -1,7 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import "./header.css";
 
-export const Header = () => {
+export const Header = ({ onSearch }) => {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+
+    if (searchTerm.trim()) {
+      setSearchTerm("");
+      onSearch(searchTerm);
+    }
+  };
+
   return (
     <header>
       <div className="logo-container">
@@ -9,8 +23,16 @@ export const Header = () => {
         <h1 className="title">ThreadWeaver</h1>
       </div>
       <div className="searchBar-container">
-        <input type="text" placeholder="Search..." className="searchBar" />
-        <button className="searchButton">🔍</button>
+        <form onSubmit={handleSearchSubmit}>
+          <input
+            type="text"
+            placeholder="Search..."
+            className="searchBar"
+            onChange={handleSearchChange}
+            value={searchTerm}
+          />
+          <button className="searchButton">🔍</button>
+        </form>
       </div>
     </header>
   );

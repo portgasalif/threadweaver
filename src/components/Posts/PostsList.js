@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import "./PostsList.css";
 import PostCard from "./PostCard";
 import { fetchSubredditPosts } from "../../services/redditApi";
+import { searchPosts } from "../../services/redditApi";
 
-export const PostsList = ({ selectedSubreddit }) => {
+export const PostsList = ({ selectedSubreddit, searchTerm }) => {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -12,7 +13,12 @@ export const PostsList = ({ selectedSubreddit }) => {
     const fetchPosts = async () => {
       setIsLoading(true);
       try {
-        const fetchedPosts = await fetchSubredditPosts(selectedSubreddit);
+        let fetchedPosts;
+        if (searchTerm) {
+          fetchedPosts = await searchPosts(searchTerm);
+        } else {
+          fetchedPosts = await fetchSubredditPosts(selectedSubreddit);
+        }
         setPosts(fetchedPosts);
       } catch (error) {
         setError(error.message);
@@ -22,7 +28,7 @@ export const PostsList = ({ selectedSubreddit }) => {
     };
 
     fetchPosts();
-  }, [selectedSubreddit]);
+  }, [selectedSubreddit, searchTerm]);
 
   if (isLoading) {
     return <div className="loading">Loading...</div>;
@@ -35,7 +41,9 @@ export const PostsList = ({ selectedSubreddit }) => {
   if (posts.length === 0) {
     return (
       <div className="no-posts">
-        No posts available in r/{selectedSubreddit}
+        {searchTerm
+          ? `No posts found for "${searchTerm}"`
+          : "No posts available in the selected subreddit."}
       </div>
     );
   }
