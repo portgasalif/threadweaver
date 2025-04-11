@@ -44,3 +44,49 @@
   margin-right: 10px;
   font-size: 20px;
 }
+
+@media (max-width: 768px) {
+  .subreddits {
+    padding: 8px;
+    margin-bottom: 15px;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+  .subreddits h2 {
+    margin-bottom: 8px;
+    font-size: 1rem;
+  }
+
+  .subreddits ul {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px;
+    padding-bottom: 5px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    margin: 0;
+  }
+
+  .subreddits li {
+    flex: 0 0 auto;
+    padding: 8px 10px;
+    margin: 0;
+    white-space: nowrap;
+    font-size: 13px;
+    min-height: 36px;
+    border-radius: 18px;
+    background-color: #f0f2f5;
+  }
+  .subreddits .icon {
+    font-size: 16px;
+    margin-right: 8px;
+  }
+
+  .subreddits li.selected {
+    background-color: rgb(66, 103, 210);
+    color: white;
+    font-weight: 500;
+  }
+}

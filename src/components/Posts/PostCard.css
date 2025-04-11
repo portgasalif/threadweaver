@@ -88,7 +88,6 @@
   font-weight: 500;
 }
 
-/* Media query untuk responsive design */
 @media (max-width: 768px) {
   .post-card {
     padding: 12px;
@@ -96,5 +95,38 @@
 
   .post-card h2 {
     font-size: 16px;
+  }
+  .vote-btn {
+    min-height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .post-card {
+    flex-direction: column;
+  }
+  
+  .vote-section {
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+    padding: 5px 0;
+  }
+  
+  .vote-btn {
+    margin: 0 15px;
+  }
+  
+  .content-section {
+    padding-left: 0;
+    margin-top: 10px;
+  }
+  
+  .post-thumbnail {
+    max-height: 200px;
   }
 }

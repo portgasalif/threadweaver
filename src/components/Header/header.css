@@ -58,3 +58,27 @@ header {
 .searchButton:hover {
   background-color: #495057;
 }
+
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    padding: 0.5rem;
+  }
+
+  .logo-container {
+    margin-bottom: 10px;
+  }
+
+  .searchBar-container {
+    margin: 10px 0;
+    width: 100%;
+  }
+
+  .logo {
+    height: 50px;
+  }
+
+  .title {
+    font-size: 1.2rem;
+  }
+}
