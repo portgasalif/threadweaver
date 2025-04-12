@@ -15,8 +15,8 @@ export const fetchSubredditPosts = async (subreddit = "popular") => {
       title: post.data.title,
       author: post.data.author,
       subreddit: post.data.subreddit,
-      upvotes: post.data.ups,
-      commentCount: post.data.num_comments,
+      upvotes: post.data.ups ?? post.data.score ?? 0,
+      commentCount: post.data.num_comments || 0,
       image:
         post.data.thumbnail !== "self" && post.data.thumbnail !== "default"
           ? post.data.thumbnail
@@ -47,8 +47,8 @@ export const searchPosts = async (searchTerm) => {
       title: post.data.title,
       author: post.data.author,
       subreddit: post.data.subreddit,
-      upvotes: post.data.ups,
-      commentCount: post.data.num_comments,
+      upvotes: post.data.ups || post.data.score || 0,
+      commentCount: post.data.num_comments || 0,
       image:
         post.data.thumbnail !== "self" && post.data.thumbnail !== "default"
           ? post.data.thumbnail
