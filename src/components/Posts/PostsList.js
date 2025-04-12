@@ -8,6 +8,26 @@ export const PostsList = ({ selectedSubreddit, searchTerm }) => {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [postVotes, setPostVotes] = useState({});
+
+  const handleVote = (postId, newStatus, changeAmount) => {
+    setPostVotes((prev) => {
+      const currentVote = prev[postId] || { status: 0, change: 0 };
+
+     
+      if (newStatus === 0) {
+        return {
+          ...prev,
+          [postId]: { status: 0, change: 0 },
+        };
+      }
+
+      return {
+        ...prev,
+        [postId]: { status: newStatus, change: changeAmount },
+      };
+    });
+  };
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -51,7 +71,13 @@ export const PostsList = ({ selectedSubreddit, searchTerm }) => {
   return (
     <div className="posts-container">
       {posts.map((post) => (
-        <PostCard key={post.id} post={post} />
+        <PostCard
+          key={post.id}
+          post={post}
+          voteStatus={postVotes[post.id]?.status || 0}
+          voteChange={postVotes[post.id]?.change || 0}
+          handleVote={handleVote}
+        />
       ))}
     </div>
   );

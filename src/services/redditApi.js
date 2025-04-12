@@ -1,76 +1,83 @@
-const dummyPosts = [
-  {
-    id: "post1",
-    title: "How to solve CORS issues when developing React applications",
-    author: "dev_expert",
-    subreddit: "programming",
-    upvotes: 423,
-    commentCount: 56,
-    image: "https://picsum.photos/id/237/400/300",
-  },
-  {
-    id: "post2",
-    title: "Amazing sunset I captured yesterday in Bali",
-    author: "traveller99",
-    subreddit: "travel",
-    upvotes: 2105,
-    commentCount: 132,
-    image: "https://picsum.photos/id/1002/400/300",
-  },
-  {
-    id: "post3",
-    title: "My thoughts on React 18's new features",
-    author: "reactfan",
-    subreddit: "reactjs",
-    upvotes: 843,
-    commentCount: 75,
-    image: null,
-  },
-  {
-    id: "post4",
-    title: "This simple trick reduced my bundle size by 40%",
-    author: "webdev_guru",
-    subreddit: "webdev",
-    upvotes: 1256,
-    commentCount: 97,
-    image: "https://picsum.photos/id/3/400/300",
-  },
-  {
-    id: "post5",
-    title: "The most underrated JavaScript feature you should be using",
-    author: "js_wizard",
-    subreddit: "javascript",
-    upvotes: 738,
-    commentCount: 42,
-    image: null,
-  },
-];
-
 export const fetchSubredditPosts = async (subreddit = "popular") => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      if (subreddit && subreddit !== "popular") {
-        const filteredPosts = dummyPosts.filter(
-          (post) => post.subreddit.toLowerCase() === subreddit.toLowerCase()
-        );
-        resolve(filteredPosts);
-      } else {
-        resolve(dummyPosts);
-      }
-    }, 800);
-  });
+  try {
+    const apiUrl = `https://www.reddit.com/r/${subreddit}.json`;
+
+    const response = await fetch(apiUrl);
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status} - ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    return data.data.children.map((post) => ({
+      id: post.data.id,
+      title: post.data.title,
+      author: post.data.author,
+      subreddit: post.data.subreddit,
+      upvotes: post.data.ups ?? post.data.score ?? 0,
+      commentCount: post.data.num_comments || 0,
+      image:
+        post.data.thumbnail !== "self" && post.data.thumbnail !== "default"
+          ? post.data.thumbnail
+          : null,
+    }));
+  } catch (error) {
+    console.error("Error fetching subreddit posts:", error);
+    throw error;
+  }
 };
 
 export const searchPosts = async (searchTerm) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const filteredPosts = dummyPosts.filter(
-        (post) =>
-          post.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          post.subreddit.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      resolve(filteredPosts);
-    }, 800);
-  });
+  try {
+    const apiUrl = `https://www.reddit.com/search.json?q=${encodeURIComponent(
+      searchTerm
+    )}`;
+
+    const response = await fetch(apiUrl);
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status} - ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    return data.data.children.map((post) => ({
+      id: post.data.id,
+      title: post.data.title,
+      author: post.data.author,
+      subreddit: post.data.subreddit,
+      upvotes: post.data.ups || post.data.score || 0,
+      commentCount: post.data.num_comments || 0,
+      image:
+        post.data.thumbnail !== "self" && post.data.thumbnail !== "default"
+          ? post.data.thumbnail
+          : null,
+    }));
+  } catch (error) {
+    console.error("Error searching posts:", error);
+    throw error;
+  }
+};
+
+export const fetchPopularSubreddits = async () => {
+  try {
+    const response = await fetch(
+      "https://www.reddit.com/subreddits/popular.json?limit=10"
+    );
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status} - ${response.statusText}`);
+    }
+    const data = await response.json();
+    const icons = ["📚", "🌐", "💬", "📰", "🔥", "✨", "👍", "🎮", "📷", "🎵"];
+
+    return data.data.children.map((subreddit, index) => ({
+      id: index,
+      name: subreddit.data.display_name.toLowerCase(),
+      icon: icons[index % icons.length],
+    }));
+  } catch (error) {
+    console.error("Error fetching popular subreddits:", error);
+    throw error;
+  }
 };

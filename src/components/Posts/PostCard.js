@@ -1,16 +1,57 @@
 import React from "react";
 import "./PostCard.css";
 
-export const PostCard = ({ post }) => {
-  const { title, author, upvotes, commentCount, subreddit, image } = post;
+export const PostCard = ({
+  post,
+  voteStatus = 0,
+  voteChange = 0,
+  handleVote,
+}) => {
+  const {
+    title,
+    author,
+    upvotes: initialUpvotes,
+    commentCount,
+    subreddit,
+    image,
+  } = post;
 
+  const handleUpVote = () => {
+    const postId = post.id;
+    if (voteStatus === 1) {
+      handleVote(postId, 0, 0);
+    } else {
+      const change = voteStatus === -1 ? 2 : 1;
+      handleVote(postId, 1, change);
+    }
+  };
+
+  const handleDownVote = () => {
+    const postId = post.id;
+    if (voteStatus === -1) {
+      handleVote(postId, 0, 0);
+    } else {
+      const change = voteStatus === 1 ? -2 : -1;
+      handleVote(postId, -1, change);
+    }
+  };
   return (
     <div className="post-card">
       {/* Vote section */}
       <div className="vote-section">
-        <button className="vote-btn">▲</button>
-        <span>{upvotes}</span>
-        <button className="vote-btn">▼</button>
+        <button
+          className={`vote-btn ${voteStatus === 1 ? "active" : ""}`}
+          onClick={handleUpVote}
+        >
+          ▲
+        </button>
+        <span>{initialUpvotes + (voteChange || 0)}</span>
+        <button
+          className={`vote-btn ${voteStatus === -1 ? "active" : ""}`}
+          onClick={handleDownVote}
+        >
+          ▼
+        </button>
       </div>
 
       {/* Content section */}

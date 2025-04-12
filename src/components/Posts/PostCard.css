@@ -20,7 +20,6 @@
   flex-direction: column;
   align-items: center;
   padding: 10px 4px;
-  background-color: #f8f9fa;
   min-width: 40px;
 }
 
@@ -34,6 +33,12 @@
 
 .vote-btn:hover {
   color: #ff4500;
+}
+.vote-btn.active {
+  color: #ff4500;
+}
+.vote-btn:last-child.active {
+  color: #7193ff;
 }
 
 .content-section {
@@ -109,23 +114,23 @@
   .post-card {
     flex-direction: column;
   }
-  
+
   .vote-section {
     flex-direction: row;
     width: 100%;
     justify-content: center;
     padding: 5px 0;
   }
-  
+
   .vote-btn {
     margin: 0 15px;
   }
-  
+
   .content-section {
     padding-left: 0;
     margin-top: 10px;
   }
-  
+
   .post-thumbnail {
     max-height: 200px;
   }
