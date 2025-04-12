@@ -1,40 +1,26 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./Subreddits.css";
+import { fetchPopularSubreddits } from "../../services/redditApi";
 
 export const Subreddits = ({ onSelectSubreddit, selectedSubreddit }) => {
-  const subreddits = [
-    {
-      id: 0,
-      name: "popular",
-      icon: "🔥",
-    },
-    {
-      id: 1,
-      name: "programming",
-      icon: "💻",
-    },
-    {
-      id: 2,
-      name: "javascript",
-      icon: "🟨",
-    },
-    {
-      id: 3,
-      name: "reactjs",
-      icon: "⚛️",
-    },
-    {
-      id: 4,
-      name: "webdev",
-      icon: "🌐",
-    },
-    {
-      id: 5,
-      name: "datascience",
-      icon: "📊",
-    },
-  ];
+  const [subreddits, setSubreddits] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+  useEffect(() => {
+    const fetchSubreddits = async () => {
+      setLoading(true);
+      try {
+        const data = await fetchPopularSubreddits();
+        setSubreddits(data);
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSubreddits();
+  }, []);
   const handleSubredditClick = (subreddit) => {
     onSelectSubreddit(subreddit.name);
   };
@@ -42,18 +28,23 @@ export const Subreddits = ({ onSelectSubreddit, selectedSubreddit }) => {
     <div className="subreddits">
       <h2>Subreddits</h2>
 
-      <ul>
-        {subreddits.map((subreddit) => (
-          <li
-            key={subreddit.id}
-            className={selectedSubreddit === subreddit.name ? "selected" : ""}
-            onClick={() => handleSubredditClick(subreddit)}
-          >
-            <span className="icon">{subreddit.icon}</span>
-            {subreddit.name}
-          </li>
-        ))}
-      </ul>
+      {loading && <p>Loading...</p>}
+      {error && <p>Error loading subreddits</p>}
+
+      {!loading && !error && (
+        <ul>
+          {subreddits.map((subreddit) => (
+            <li
+              key={subreddit.id}
+              className={selectedSubreddit === subreddit.name ? "selected" : ""}
+              onClick={() => handleSubredditClick(subreddit)}
+            >
+              <span className="icon">{subreddit.icon}</span>
+              {subreddit.name}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };
