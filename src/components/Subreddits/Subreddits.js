@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Subreddits.css";
 import { fetchPopularSubreddits } from "../../services/redditApi";
+import { useSelector, useDispatch } from "react-redux";
 
 export const Subreddits = ({ onSelectSubreddit, selectedSubreddit }) => {
   const [subreddits, setSubreddits] = useState([]);
