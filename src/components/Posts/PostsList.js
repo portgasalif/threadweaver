@@ -12,9 +12,6 @@ export const PostsList = ({ selectedSubreddit, searchTerm }) => {
 
   const handleVote = (postId, newStatus, changeAmount) => {
     setPostVotes((prev) => {
-      const currentVote = prev[postId] || { status: 0, change: 0 };
-
-     
       if (newStatus === 0) {
         return {
           ...prev,
