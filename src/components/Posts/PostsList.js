@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./PostsList.css";
 import PostCard from "./PostCard";
-import { fetchSubredditPosts } from "../../services/redditApi";
-import { searchPosts } from "../../services/redditApi";
+
 import { useSelector, useDispatch } from "react-redux";
 import {
   fetchPosts,
@@ -10,12 +9,15 @@ import {
   votePost,
 } from "../../features/posts/postsSlice";
 
-export const PostsList = ({ selectedSubreddit, searchTerm }) => {
+export const PostsList = ({ searchTerm }) => {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts.posts);
   const status = useSelector((state) => state.posts.status);
   const error = useSelector((state) => state.posts.error);
   const postVotes = useSelector((state) => state.posts.postVotes);
+  const selectedSubreddit = useSelector(
+    (state) => state.subreddits.selectedSubreddit
+  );
 
   const handleVote = (postId, newStatus, changeAmount) => {
     dispatch(votePost({ postId, status: newStatus, change: changeAmount }));

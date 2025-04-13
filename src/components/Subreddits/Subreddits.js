@@ -1,38 +1,38 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import "./Subreddits.css";
-import { fetchPopularSubreddits } from "../../services/redditApi";
 import { useSelector, useDispatch } from "react-redux";
+import {
+  fetchSubreddits,
+  selectSubreddit,
+} from "../../features/subreddits/subredditsSlice";
 
-export const Subreddits = ({ onSelectSubreddit, selectedSubreddit }) => {
-  const [subreddits, setSubreddits] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+export const Subreddits = () => {
+  const dispatch = useDispatch();
+  const subreddits = useSelector((state) => state.subreddits.subreddits);
+  const status = useSelector((state) => state.subreddits.status);
+  const error = useSelector((state) => state.subreddits.error);
+  const selectedSubreddit = useSelector(
+    (state) => state.subreddits.selectedSubreddit
+  );
 
   useEffect(() => {
-    const fetchSubreddits = async () => {
-      setLoading(true);
-      try {
-        const data = await fetchPopularSubreddits();
-        setSubreddits(data);
-      } catch (error) {
-        setError(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchSubreddits();
-  }, []);
+    if (status === "idle") {
+      dispatch(fetchSubreddits());
+    }
+  }, [dispatch, status]);
+
   const handleSubredditClick = (subreddit) => {
-    onSelectSubreddit(subreddit.name);
+    dispatch(selectSubreddit(subreddit.name));
   };
+
   return (
     <div className="subreddits">
       <h2>Subreddits</h2>
 
-      {loading && <p>Loading...</p>}
-      {error && <p>Error loading subreddits</p>}
+      {status === "loading" && <p>Loading...</p>}
+      {status === "failed" && <p>Error loading subreddits: {error}</p>}
 
-      {!loading && !error && (
+      {status === "succeeded" && (
         <ul>
           {subreddits.map((subreddit) => (
             <li
@@ -49,3 +49,5 @@ export const Subreddits = ({ onSelectSubreddit, selectedSubreddit }) => {
     </div>
   );
 };
+
+export default Subreddits;
