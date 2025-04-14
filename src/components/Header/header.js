@@ -1,5 +1,5 @@
 import React from "react";
-import "./Header.css";
+import "./header.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setSearchTerm,
