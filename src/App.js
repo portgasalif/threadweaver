@@ -1,42 +1,22 @@
-import React, { useState } from "react";
+import React from "react";
 import "./App.css";
-import { Header } from "./components/Header/header";
+import { Header } from "./components/Header/Header";
 import { Subreddits } from "./components/Subreddits/Subreddits";
 import PostsList from "./components/Posts/PostsList";
+import { useSelector } from "react-redux";
 
 function App() {
-  const [selectedSubreddit, setSelectedSubreddit] = useState("popular");
-  const [searchTerm, setSearchTerm] = useState("");
+  const selectedSubreddit = useSelector(
+    (state) => state.subreddits.selectedSubreddit
+  );
+  const searchTerm = useSelector((state) => state.posts.searchTerm);
 
-  const handleSelectSubreddit = (subreddit) => {
-    setSelectedSubreddit(subreddit);
-    setSearchTerm("");
-  };
-
-  const handleSearchChange = (term) => {
-    setSearchTerm(term);
-  };
   return (
     <div className="App">
-      <Header onSearch={handleSearchChange} />
-      <div className="app-container">
-        <main className="content">
-          <h2>
-            {searchTerm
-              ? `Search results: "${searchTerm}"`
-              : `r/${selectedSubreddit}`}
-          </h2>
-          <PostsList
-            selectedSubreddit={selectedSubreddit}
-            searchTerm={searchTerm}
-          />
-        </main>
-        <aside className="sidebar">
-          <Subreddits
-            onSelectSubreddit={handleSelectSubreddit}
-            selectedSubreddit={selectedSubreddit}
-          />
-        </aside>
+      <Header />
+      <div className="main-container">
+        <Subreddits />
+        <PostsList />
       </div>
     </div>
   );

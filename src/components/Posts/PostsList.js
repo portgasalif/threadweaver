@@ -1,17 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import "./PostsList.css";
 import PostCard from "./PostCard";
-import { fetchSubredditPosts } from "../../services/redditApi";
-import { searchPosts } from "../../services/redditApi";
 
-export const PostsList = ({ selectedSubreddit, searchTerm }) => {
-  const [posts, setPosts] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [postVotes, setPostVotes] = useState({});
+import { useSelector, useDispatch } from "react-redux";
+import {
+  fetchPosts,
+  searchPostsThunk,
+  votePost,
+} from "../../features/posts/postsSlice";
+
+export const PostsList = () => {
+  const dispatch = useDispatch();
+  const posts = useSelector((state) => state.posts.posts);
+  const status = useSelector((state) => state.posts.status);
+  const error = useSelector((state) => state.posts.error);
+  const postVotes = useSelector((state) => state.posts.postVotes);
+  const selectedSubreddit = useSelector(
+    (state) => state.subreddits.selectedSubreddit
+  );
+  const searchTerm = useSelector((state) => state.posts.searchTerm);
 
   const handleVote = (postId, newStatus, changeAmount) => {
     setPostVotes((prev) => {
+      const currentVote = prev[postId] || { status: 0, change: 0 };
+
      
       if (newStatus === 0) {
         return {
@@ -28,31 +40,20 @@ export const PostsList = ({ selectedSubreddit, searchTerm }) => {
   };
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      setIsLoading(true);
-      try {
-        let fetchedPosts;
-        if (searchTerm) {
-          fetchedPosts = await searchPosts(searchTerm);
-        } else {
-          fetchedPosts = await fetchSubredditPosts(selectedSubreddit);
-        }
-        setPosts(fetchedPosts);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setIsLoading(false);
+    if (status === "idle" || status === "succeeded") {
+      if (searchTerm) {
+        dispatch(searchPostsThunk(searchTerm));
+      } else {
+        dispatch(fetchPosts(selectedSubreddit));
       }
-    };
+    }
+  }, [dispatch, selectedSubreddit, searchTerm, status]);
 
-    fetchPosts();
-  }, [selectedSubreddit, searchTerm]);
-
-  if (isLoading) {
+  if (status === "loading") {
     return <div className="loading">Loading...</div>;
   }
 
-  if (error) {
+  if (status === "failed") {
     return <div className="error">Error: {error}</div>;
   }
 
