@@ -1,18 +1,24 @@
-import React, { useState } from "react";
+import React from "react";
 import "./header.css";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setSearchTerm,
+  searchPostsThunk,
+} from "../../features/posts/postsSlice";
 
-export const Header = ({ onSearch }) => {
-  const [searchTerm, setSearchTerm] = useState("");
+export const Header = () => {
+  const dispatch = useDispatch();
+  const searchTerm = useSelector((state) => state.posts.searchTerm);
 
   const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
+    dispatch(setSearchTerm(event.target.value));
   };
+
   const handleSearchSubmit = (event) => {
     event.preventDefault();
 
     if (searchTerm.trim()) {
-      setSearchTerm("");
-      onSearch(searchTerm);
+      dispatch(searchPostsThunk(searchTerm));
     }
   };
 

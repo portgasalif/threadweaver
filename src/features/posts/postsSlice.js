@@ -23,11 +23,15 @@ const postsSlice = createSlice({
     status: "idle",
     error: null,
     postVotes: {},
+    searchTerm: "",
   },
   reducers: {
     votePost: (state, action) => {
       const { postId, status, change } = action.payload;
       state.postVotes[postId] = { status, change };
+    },
+    setSearchTerm: (state, action) => {
+      state.searchTerm = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -58,5 +62,6 @@ const postsSlice = createSlice({
   },
 });
 
-export const { votePost } = postsSlice.actions;
+export const { votePost, setSearchTerm } = postsSlice.actions;
+
 export default postsSlice.reducer;

@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import "./App.css";
-import { Header } from "./components/Header/header";
+import { Header } from "./components/Header/Header";
 import { Subreddits } from "./components/Subreddits/Subreddits";
 import PostsList from "./components/Posts/PostsList";
 import { useSelector } from "react-redux";
@@ -9,27 +9,14 @@ function App() {
   const selectedSubreddit = useSelector(
     (state) => state.subreddits.selectedSubreddit
   );
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const handleSearchChange = (term) => {
-    setSearchTerm(term);
-  };
+  const searchTerm = useSelector((state) => state.posts.searchTerm);
 
   return (
     <div className="App">
-      <Header onSearch={handleSearchChange} />
-      <div className="app-container">
-        <main className="content">
-          <h2>
-            {searchTerm
-              ? `Search results: "${searchTerm}"`
-              : `r/${selectedSubreddit}`}
-          </h2>
-          <PostsList searchTerm={searchTerm} />
-        </main>
-        <aside className="sidebar">
-          <Subreddits />
-        </aside>
+      <Header />
+      <div className="main-container">
+        <Subreddits />
+        <PostsList />
       </div>
     </div>
   );

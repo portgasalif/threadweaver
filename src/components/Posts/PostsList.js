@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import "./PostsList.css";
 import PostCard from "./PostCard";
 
@@ -9,7 +9,7 @@ import {
   votePost,
 } from "../../features/posts/postsSlice";
 
-export const PostsList = ({ searchTerm }) => {
+export const PostsList = () => {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts.posts);
   const status = useSelector((state) => state.posts.status);
@@ -18,6 +18,7 @@ export const PostsList = ({ searchTerm }) => {
   const selectedSubreddit = useSelector(
     (state) => state.subreddits.selectedSubreddit
   );
+  const searchTerm = useSelector((state) => state.posts.searchTerm);
 
   const handleVote = (postId, newStatus, changeAmount) => {
     dispatch(votePost({ postId, status: newStatus, change: changeAmount }));
