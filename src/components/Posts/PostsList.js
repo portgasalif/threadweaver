@@ -25,7 +25,9 @@ export const PostsList = () => {
   };
 
   useEffect(() => {
-    if (status === "idle" || status === "succeeded") {
+    // Hanya fetch ketika status idle, bukan ketika succeeded
+    // Ini mencegah fetch berulang
+    if (status === "idle") {
       if (searchTerm) {
         dispatch(searchPostsThunk(searchTerm));
       } else {
