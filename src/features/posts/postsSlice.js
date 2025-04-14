@@ -3,9 +3,14 @@ import { fetchSubredditPosts, searchPosts } from "../../services/redditApi";
 
 export const fetchPosts = createAsyncThunk(
   "posts/fetchPosts",
-  async (subreddit = "popular") => {
-    const response = await fetchSubredditPosts(subreddit);
-    return response;
+  async (subreddit = "popular", { rejectWithValue }) => {
+    try {
+      const response = await fetchSubredditPosts(subreddit);
+      return response;
+    } catch (error) {
+      console.error("Error in fetchPosts thunk:", error);
+      return rejectWithValue(error.message || "Failed to fetch posts");
+    }
   }
 );
 
@@ -36,16 +41,20 @@ const postsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase("subreddits/selectSubreddit", (state) => {
+        state.status = "idle";
+      })
       .addCase(fetchPosts.pending, (state) => {
         state.status = "loading";
       })
       .addCase(fetchPosts.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.posts = action.payload;
+        state.error = null;
       })
       .addCase(fetchPosts.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.error.message;
+        state.error = action.payload || action.error.message;
       })
 
       .addCase(searchPostsThunk.pending, (state) => {

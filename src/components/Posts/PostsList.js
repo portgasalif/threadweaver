@@ -21,26 +21,13 @@ export const PostsList = () => {
   const searchTerm = useSelector((state) => state.posts.searchTerm);
 
   const handleVote = (postId, newStatus, changeAmount) => {
-    setPostVotes((prev) => {
-      const currentVote = prev[postId] || { status: 0, change: 0 };
-
-     
-      if (newStatus === 0) {
-        return {
-          ...prev,
-          [postId]: { status: 0, change: 0 },
-        };
-      }
-
-      return {
-        ...prev,
-        [postId]: { status: newStatus, change: changeAmount },
-      };
-    });
+    dispatch(votePost({ postId, status: newStatus, change: changeAmount }));
   };
 
   useEffect(() => {
-    if (status === "idle" || status === "succeeded") {
+    // Hanya fetch ketika status idle, bukan ketika succeeded
+    // Ini mencegah fetch berulang
+    if (status === "idle") {
       if (searchTerm) {
         dispatch(searchPostsThunk(searchTerm));
       } else {
