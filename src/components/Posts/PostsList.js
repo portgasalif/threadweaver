@@ -25,8 +25,6 @@ export const PostsList = () => {
   };
 
   useEffect(() => {
-    // Hanya fetch ketika status idle, bukan ketika succeeded
-    // Ini mencegah fetch berulang
     if (status === "idle") {
       if (searchTerm) {
         dispatch(searchPostsThunk(searchTerm));
@@ -34,7 +32,8 @@ export const PostsList = () => {
         dispatch(fetchPosts(selectedSubreddit));
       }
     }
-  }, [dispatch, selectedSubreddit, searchTerm, status]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, selectedSubreddit, searchTerm]);
 
   if (status === "loading") {
     return <div className="loading">Loading...</div>;
